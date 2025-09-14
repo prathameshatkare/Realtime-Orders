@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Realtime Orders Client</title>
+</head>
+<body>
+  <h1>📦 Realtime Orders Updates</h1>
+  <ul id="updates"></ul>
+
+  <script>
+    const socket = new WebSocket("ws://127.0.0.1:8000/ws");
+
+    socket.onopen = () => {
+      console.log("✅ Connected to WebSocket");
+    };
+
+    socket.onmessage = (event) => {
+      const data = JSON.parse(event.data);
+      console.log("Received:", data);
+
+      const li = document.createElement("li");
+      li.textContent = `Order #${data.id} | ${data.customer_name} | ${data.product_name} | ${data.status} | ${data.updated_at}`;
+      document.getElementById("updates").appendChild(li);
+    };
+
+    socket.onclose = () => {
+      console.log("❌ Disconnected from WebSocket");
+    };
+  </script>
+</body>
+</html>
